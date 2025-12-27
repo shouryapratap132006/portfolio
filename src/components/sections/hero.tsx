@@ -1,35 +1,23 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { Scene } from "@/components/canvas/scene";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Download } from "lucide-react";
 import Link from "next/link";
 
 export const Hero = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end start"],
-    });
-
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-    const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-    const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
-
     return (
         <section
             id="home"
-            ref={containerRef}
             className="relative h-screen w-full flex items-center justify-center overflow-hidden"
         >
             {/* Three.js Background */}
             <Scene />
 
             {/* Content */}
-            <motion.div
-                style={{ y, opacity, scale }}
+            <div
                 className="container px-6 relative z-10"
             >
                 <div className="max-w-4xl mx-auto text-center">
@@ -106,14 +94,13 @@ export const Hero = () => {
                         </Button>
                     </motion.div>
                 </div>
-            </motion.div>
+            </div>
 
             {/* Scroll Indicator */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2, duration: 1 }}
-                style={{ opacity }}
                 className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
             >
                 <span className="text-xs font-medium uppercase tracking-widest text-foreground/40">

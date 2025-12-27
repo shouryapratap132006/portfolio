@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Magnetic } from "@/components/ui/magnetic";
 
 const navLinks = [
     { name: "Home", href: "#home" },
@@ -81,56 +80,51 @@ export const Navbar = () => {
                 {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-10">
                     {navLinks.map((link) => (
-                        <Magnetic key={link.name} strength={0.2}>
-                            <Link
-                                href={link.href}
-                                onClick={() => setActiveSection(link.name)}
-                                className={cn(
-                                    "text-sm font-medium transition-colors relative px-2 py-1",
-                                    activeSection === link.name
-                                        ? "text-primary"
-                                        : "text-foreground/70 hover:text-foreground"
-                                )}
-                            >
-                                {link.name}
-                                {activeSection === link.name && (
-                                    <motion.span
-                                        layoutId="nav-underline"
-                                        className="absolute -bottom-1 left-0 w-full h-[2px] bg-primary rounded-full"
-                                    />
-                                )}
-                            </Link>
-                        </Magnetic>
+                        <Link
+                            key={link.name}
+                            href={link.href}
+                            onClick={() => setActiveSection(link.name)}
+                            className={cn(
+                                "text-sm font-medium transition-colors relative px-2 py-1",
+                                activeSection === link.name
+                                    ? "text-primary"
+                                    : "text-foreground/70 hover:text-foreground"
+                            )}
+                        >
+                            {link.name}
+                            {activeSection === link.name && (
+                                <span
+                                    className="absolute -bottom-1 left-0 w-full h-[2px] bg-primary rounded-full"
+                                />
+                            )}
+                        </Link>
                     ))}
 
                     {/* Socials */}
                     <div className="flex items-center gap-4 pl-6 border-l border-white/10">
                         {socialLinks.map(({ name, href, icon: Icon }) => (
-                            <Magnetic key={name} strength={0.5}>
-                                <Link
-                                    href={href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    aria-label={name}
-                                    className="text-foreground/70 hover:text-primary transition-colors p-2"
-                                >
-                                    <Icon size={20} />
-                                </Link>
-                            </Magnetic>
+                            <Link
+                                key={name}
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={name}
+                                className="text-foreground/70 hover:text-primary transition-colors p-2"
+                            >
+                                <Icon size={20} />
+                            </Link>
                         ))}
                     </div>
 
                     {/* Resume Button */}
-                    <Magnetic strength={0.3}>
-                        <Link
-                            href="/Shourya_Pratap_Resume.pdf"
-                            target="_blank"
-                            className="ml-4 inline-flex items-center gap-2 rounded-full border border-primary/30 px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-background transition"
-                        >
-                            <FileText size={16} />
-                            Resume
-                        </Link>
-                    </Magnetic>
+                    <Link
+                        href="/Shourya_Pratap_Resume.pdf"
+                        target="_blank"
+                        className="ml-4 inline-flex items-center gap-2 rounded-full border border-primary/30 px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-background transition"
+                    >
+                        <FileText size={16} />
+                        Resume
+                    </Link>
                 </div>
 
                 {/* Mobile Menu Button */}

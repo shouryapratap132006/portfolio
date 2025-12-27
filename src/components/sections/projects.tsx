@@ -8,95 +8,95 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const projects = [
-  {
-    id: 1,
-    title: "Sakhi AI – Breast Cancer Detection System",
-    description:
-      "Production-ready AI/ML system for predicting malignant vs benign breast tumors with high recall and explainability.",
-    longDescription:
-      "Sakhi AI is an end-to-end Machine Learning system built to predict whether a breast tumor is Malignant or Benign using clinical diagnostic features. The model is trained on the Breast Cancer Wisconsin (Diagnostic) dataset with a strong focus on recall to minimize false negatives. Advanced models like XGBoost are used along with SHAP for explainability. The system is deployed with a Flask backend and a modern Next.js frontend featuring interactive visualizations.",
-    tech: [
-      "Python",
-      "Scikit-learn",
-      "XGBoost",
-      "SHAP",
-      "Flask",
-      "Next.js",
-      "Tailwind CSS",
-      "Recharts",
-    ],
-    github: "https://github.com/shouryapratap132006/sakhiai",
-    live: "https://sakhiai-sigma.vercel.app/",
-    image:
-      "https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&q=80&w=1200",
-  },
+    {
+        id: 1,
+        title: "Sakhi AI – Breast Cancer Detection System",
+        description:
+            "Production-ready AI/ML system for predicting malignant vs benign breast tumors with high recall and explainability.",
+        longDescription:
+            "Sakhi AI is an end-to-end Machine Learning system built to predict whether a breast tumor is Malignant or Benign using clinical diagnostic features. The model is trained on the Breast Cancer Wisconsin (Diagnostic) dataset with a strong focus on recall to minimize false negatives. Advanced models like XGBoost are used along with SHAP for explainability. The system is deployed with a Flask backend and a modern Next.js frontend featuring interactive visualizations.",
+        tech: [
+            "Python",
+            "Scikit-learn",
+            "XGBoost",
+            "SHAP",
+            "Flask",
+            "Next.js",
+            "Tailwind CSS",
+            "Recharts",
+        ],
+        github: "https://github.com/shouryapratap132006/sakhiai",
+        live: "https://sakhiai-sigma.vercel.app/",
+        image:
+            "https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&q=80&w=1200",
+    },
 
-  {
-    id: 2,
-    title: "DevSync – AI Career Growth Partner",
-    description:
-      "AI-powered platform that analyzes skills, generates learning roadmaps, and tracks career growth.",
-    longDescription:
-      "DevSync is a full-stack AI-driven career mentorship platform designed to help developers assess their skills, generate personalized learning roadmaps, and track progress. It features JWT-based authentication, dynamic dashboards, community features, and AI-powered recommendations integrated using the Gemini API. The backend is scalable and supports full CRUD operations.",
-    tech: [
-      "Next.js",
-      "Node.js",
-      "Express.js",
-      "MongoDB",
-      "JWT",
-      "Gemini API",
-      "Tailwind CSS",
-      "Framer Motion",
-    ],
-    github: "https://github.com/shouryapratap132006/devsync",
-    live: "https://devsync-beta.vercel.app/",
-    image:
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1200",
-  },
+    {
+        id: 2,
+        title: "DevSync – AI Career Growth Partner",
+        description:
+            "AI-powered platform that analyzes skills, generates learning roadmaps, and tracks career growth.",
+        longDescription:
+            "DevSync is a full-stack AI-driven career mentorship platform designed to help developers assess their skills, generate personalized learning roadmaps, and track progress. It features JWT-based authentication, dynamic dashboards, community features, and AI-powered recommendations integrated using the Gemini API. The backend is scalable and supports full CRUD operations.",
+        tech: [
+            "Next.js",
+            "Node.js",
+            "Express.js",
+            "MongoDB",
+            "JWT",
+            "Gemini API",
+            "Tailwind CSS",
+            "Framer Motion",
+        ],
+        github: "https://github.com/shouryapratap132006/devsync",
+        live: "https://devsync-beta.vercel.app/",
+        image:
+            "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1200",
+    },
 
-  {
-    id: 3,
-    title: "E.D.I.T.H – AI Chatbot Maker",
-    description:
-      "Customizable chatbot builder for designing and managing AI-powered conversational interfaces.",
-    longDescription:
-      "E.D.I.T.H (Extremely Digital Intelligent Thought Hub) is a web-based chatbot maker that allows users to design, preview, and manage chatbots through an intuitive UI. The project emphasizes backend-driven chatbot configuration, smooth frontend animations, and database-backed workflows.",
-    tech: [
-      "Next.js",
-      "React",
-      "Node.js",
-      "MongoDB",
-      "JavaScript",
-      "Postman",
-      "Framer Motion",
-    ],
-    github: "https://github.com/shouryapratap132006/Chatbot",
-    live: "https://chatbot-edith.vercel.app/",
-    image:
-      "https://images.unsplash.com/photo-1684369175809-f9642140a1bd?w=900&auto=format&fit=crop&q=60",
-  },
+    {
+        id: 3,
+        title: "E.D.I.T.H – AI Chatbot Maker",
+        description:
+            "Customizable chatbot builder for designing and managing AI-powered conversational interfaces.",
+        longDescription:
+            "E.D.I.T.H (Extremely Digital Intelligent Thought Hub) is a web-based chatbot maker that allows users to design, preview, and manage chatbots through an intuitive UI. The project emphasizes backend-driven chatbot configuration, smooth frontend animations, and database-backed workflows.",
+        tech: [
+            "Next.js",
+            "React",
+            "Node.js",
+            "MongoDB",
+            "JavaScript",
+            "Postman",
+            "Framer Motion",
+        ],
+        github: "https://github.com/shouryapratap132006/Chatbot",
+        live: "https://chatbot-edith.vercel.app/",
+        image:
+            "https://images.unsplash.com/photo-1684369175809-f9642140a1bd?w=900&auto=format&fit=crop&q=60",
+    },
 
-  {
-    id: 4,
-    title: "UrbanUpTrend – Full Stack E-Commerce Platform",
-    description:
-      "Modern e-commerce platform with filtering, wishlist, cart, and order management.",
-    longDescription:
-      "UrbanUpTrend is a feature-rich full-stack e-commerce platform featuring real-time product filtering, wishlist management, cart operations, dynamic pricing, authentication, and order handling. The project demonstrates strong backend logic combined with a smooth animated UI.",
-    tech: [
-      "Next.js",
-      "React",
-      "Node.js",
-      "MongoDB",
-      "Firebase",
-      "Tailwind CSS",
-      "Framer Motion",
-    ],
-    github: "https://github.com/shouryapratap132006/UrbanUpTrend",
-    live: "https://urban-uptrend.vercel.app/",
-    image:
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200",
-  },
+    {
+        id: 4,
+        title: "UrbanUpTrend – Full Stack E-Commerce Platform",
+        description:
+            "Modern e-commerce platform with filtering, wishlist, cart, and order management.",
+        longDescription:
+            "UrbanUpTrend is a feature-rich full-stack e-commerce platform featuring real-time product filtering, wishlist management, cart operations, dynamic pricing, authentication, and order handling. The project demonstrates strong backend logic combined with a smooth animated UI.",
+        tech: [
+            "Next.js",
+            "React",
+            "Node.js",
+            "MongoDB",
+            "Firebase",
+            "Tailwind CSS",
+            "Framer Motion",
+        ],
+        github: "https://github.com/shouryapratap132006/UrbanUpTrend",
+        live: "https://urban-uptrend.vercel.app/",
+        image:
+            "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200",
+    },
 ];
 
 
