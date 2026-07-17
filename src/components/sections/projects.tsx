@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Github, ExternalLink } from "lucide-react";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Github, ExternalLink, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const projects = [
     {
@@ -31,7 +30,6 @@ const projects = [
         image:
             "https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&q=80&w=1200",
     },
-
     {
         id: 2,
         category: "Full Stack",
@@ -55,7 +53,6 @@ const projects = [
         image:
             "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1200",
     },
-
     {
         id: 3,
         category: "Full Stack",
@@ -78,7 +75,6 @@ const projects = [
         image:
             "https://images.unsplash.com/photo-1684369175809-f9642140a1bd?w=900&auto=format&fit=crop&q=60",
     },
-
     {
         id: 4,
         category: "Full Stack",
@@ -103,7 +99,7 @@ const projects = [
     },
     {
         id: 5,
-        category: "Full Stack",
+        category: ["AI / ML", "Full Stack", "Cloud & DevOps"],
         featured: true,
         title: "CineVerse – AI Movie Discovery & Social Streaming Platform",
         description:
@@ -195,7 +191,7 @@ const projects = [
     },
     {
         id: 10,
-        category: "Full Stack",
+        category: "AI / ML",
         featured: true,
         title: "PocketPilot AI – Personal Finance Advisor",
         description:
@@ -238,8 +234,7 @@ const projects = [
     },
 ];
 
-const projectCategories = ["All", "AI / ML", "Full Stack", "DVA"] as const;
-
+const projectCategories = ["All", "AI / ML", "Full Stack", "Cloud & DevOps", "DVA"] as const;
 
 const ProjectCard = ({ project, onClick }: { project: (typeof projects)[number]; onClick: () => void }) => {
     const x = useMotionValue(0);
@@ -268,6 +263,10 @@ const ProjectCard = ({ project, onClick }: { project: (typeof projects)[number];
         y.set(0);
     };
 
+    const categoryText = Array.isArray(project.category) 
+        ? project.category.join(" | ") 
+        : project.category;
+
     return (
         <motion.div
             style={{
@@ -278,7 +277,7 @@ const ProjectCard = ({ project, onClick }: { project: (typeof projects)[number];
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={onClick}
-            className="relative h-[460px] w-[min(82vw,390px)] shrink-0 rounded-[2rem] glass-dark border border-white/10 overflow-hidden cursor-pointer group shadow-2xl shadow-black/20"
+            className="relative h-[460px] w-[min(82vw,390px)] shrink-0 rounded-[2rem] glass-dark border border-white/10 overflow-hidden cursor-pointer group shadow-2xl shadow-black/25"
         >
             <div
                 style={{
@@ -289,8 +288,8 @@ const ProjectCard = ({ project, onClick }: { project: (typeof projects)[number];
             >
                 <div className="relative z-10">
                     <div className="flex items-center justify-between mb-5">
-                        <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
-                            {project.category}
+                        <span className="rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-white/90">
+                            {categoryText}
                         </span>
                         <span className="flex size-9 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 group-hover:rotate-45">
                             <ArrowUpRight className="size-4" />
@@ -298,12 +297,12 @@ const ProjectCard = ({ project, onClick }: { project: (typeof projects)[number];
                     </div>
                     <div className="flex flex-wrap gap-2 mb-4">
                         {project.tech.slice(0, 3).map((t) => (
-                            <Badge key={t} variant="secondary" className="bg-white/10 text-[10px] uppercase tracking-wider">
+                            <Badge key={t} variant="secondary" className="bg-white/10 text-[9px] uppercase tracking-wider text-white/80">
                                 {t}
                             </Badge>
                         ))}
                     </div>
-                    <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">{project.title}</h3>
+                    <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">{project.title.split(" – ")[0]}</h3>
                     <p className="text-sm text-foreground/60 line-clamp-2">{project.description}</p>
                 </div>
             </div>
@@ -320,20 +319,64 @@ const ProjectCard = ({ project, onClick }: { project: (typeof projects)[number];
 export const Projects = () => {
     const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
     const [activeCategory, setActiveCategory] = useState<(typeof projectCategories)[number]>("All");
+    const [scrollProgress, setScrollProgress] = useState(0);
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    // Custom filtering to check strings or arrays
     const visibleProjects = projects
-        .filter((project) => activeCategory === "All" || project.category === activeCategory)
+        .filter((project) => {
+            if (activeCategory === "All") return true;
+            if (Array.isArray(project.category)) {
+                return project.category.includes(activeCategory);
+            }
+            return project.category === activeCategory;
+        })
         .sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
+
     const scrollProjects = (direction: "left" | "right") => {
         scrollRef.current?.scrollBy({
-            left: direction === "left" ? -440 : 440,
+            left: direction === "left" ? -410 : 410,
             behavior: "smooth",
         });
     };
 
+    // Keep track of horizontal scroll progress
+    const handleScrollProgress = () => {
+        if (scrollRef.current) {
+            const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+            const scrollableWidth = scrollWidth - clientWidth;
+            if (scrollableWidth > 0) {
+                setScrollProgress(scrollLeft / scrollableWidth);
+            } else {
+                setScrollProgress(0);
+            }
+        }
+    };
+
+    useEffect(() => {
+        const ref = scrollRef.current;
+        if (ref) {
+            ref.addEventListener("scroll", handleScrollProgress);
+        }
+        return () => {
+            if (ref) {
+                ref.removeEventListener("scroll", handleScrollProgress);
+            }
+        };
+    }, [visibleProjects]);
+
+    // Lock page scroll when full-screen detail overlay is open
+    useEffect(() => {
+        document.body.style.overflow = selectedProject ? "hidden" : "auto";
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [selectedProject]);
+
     return (
-        <section id="projects" className="py-28 overflow-hidden">
+        <section id="projects" className="py-28 overflow-hidden bg-background">
             <div className="container px-6 mx-auto">
+                {/* Header Section */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -341,87 +384,219 @@ export const Projects = () => {
                     className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between mb-10"
                 >
                     <div className="max-w-2xl">
-                        <span className="text-primary text-xs font-semibold uppercase tracking-[0.28em]">Selected work</span>
-                        <h2 className="mt-4 text-4xl md:text-6xl font-bold tracking-tight">A closer look at <span className="text-primary">what I build.</span></h2>
+                        <span className="text-primary text-xs font-semibold uppercase tracking-[0.28em]">Selected Work</span>
+                        <h2 className="mt-4 text-4xl md:text-6xl font-bold tracking-tight">
+                            A closer look at <span className="text-primary">what I build.</span>
+                        </h2>
                     </div>
                     <p className="text-foreground/60 max-w-sm md:pb-2">
-                        Scroll through intelligent products, data stories, and production-ready experiences.
+                        Scroll through intelligent products, automated pipelines, and production-ready architectures.
                     </p>
                 </motion.div>
 
+                {/* Filter and Scroll Navigation Controls */}
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                     <div className="flex flex-wrap gap-2">
-                    {projectCategories.map((category) => (
-                        <Button
-                            key={category}
-                            variant={activeCategory === category ? "default" : "outline"}
-                            className="rounded-full px-5 border-white/10"
-                            onClick={() => setActiveCategory(category)}
-                        >
-                            {category}
-                        </Button>
-                    ))}
+                        {projectCategories.map((category) => (
+                            <Button
+                                key={category}
+                                variant={activeCategory === category ? "default" : "outline"}
+                                className="rounded-full px-5 border-white/10 text-xs font-semibold"
+                                onClick={() => {
+                                    setActiveCategory(category);
+                                    setScrollProgress(0);
+                                }}
+                            >
+                                {category}
+                            </Button>
+                        ))}
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outline" size="icon" aria-label="Previous projects" className="rounded-full border-white/15 bg-white/5" onClick={() => scrollProjects("left")}>
-                            <ArrowLeft />
+                        <Button 
+                            variant="outline" 
+                            size="icon" 
+                            aria-label="Previous projects" 
+                            className="rounded-full border-white/15 bg-white/5 cursor-pointer" 
+                            onClick={() => scrollProjects("left")}
+                        >
+                            <ArrowLeft className="size-4" />
                         </Button>
-                        <Button variant="outline" size="icon" aria-label="Next projects" className="rounded-full border-white/15 bg-white/5" onClick={() => scrollProjects("right")}>
-                            <ArrowRight />
+                        <Button 
+                            variant="outline" 
+                            size="icon" 
+                            aria-label="Next projects" 
+                            className="rounded-full border-white/15 bg-white/5 cursor-pointer" 
+                            onClick={() => scrollProjects("right")}
+                        >
+                            <ArrowRight className="size-4" />
                         </Button>
                     </div>
                 </div>
 
-                <div ref={scrollRef} className="no-scrollbar -mx-6 flex gap-5 overflow-x-auto px-6 pb-4 snap-x snap-mandatory">
+                {/* Scrolling Track */}
+                <div 
+                    ref={scrollRef} 
+                    className="no-scrollbar -mx-6 flex gap-5 overflow-x-auto px-6 pb-6 snap-x snap-mandatory scroll-smooth"
+                >
                     {visibleProjects.map((project) => (
-                        <div key={project.id} className="snap-start"><ProjectCard project={project} onClick={() => setSelectedProject(project)} /></div>
+                        <div key={project.id} className="snap-start">
+                            <ProjectCard project={project} onClick={() => setSelectedProject(project)} />
+                        </div>
                     ))}
                 </div>
+
+                {/* Horizontal Scroll Progress bar */}
+                {visibleProjects.length > 1 && (
+                    <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden mx-auto mt-6 relative">
+                        <motion.div 
+                            className="h-full bg-primary rounded-full" 
+                            style={{ 
+                                width: `${scrollProgress * 100}%`,
+                            }}
+                        />
+                    </div>
+                )}
             </div>
 
-            <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-                <DialogContent className="max-w-3xl glass-dark border-white/10 text-foreground p-0 overflow-hidden">
-                    {selectedProject && (
-                        <div className="flex flex-col">
-                            <div className="relative h-64 w-full">
-                                <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
-                            </div>
-                            <div className="p-8">
-                                <DialogHeader>
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {selectedProject.tech.map((t) => (
-                                            <Badge key={t} variant="secondary" className="bg-primary/20 text-primary border-primary/20">
-                                                {t}
-                                            </Badge>
-                                        ))}
+            {/* Immersive Full Screen Project Overlay */}
+            <AnimatePresence>
+                {selectedProject && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="fixed inset-0 z-[1000] h-screen w-screen bg-background overflow-y-auto"
+                    >
+                        {/* Close button with blur */}
+                        <button
+                            onClick={() => setSelectedProject(null)}
+                            className="fixed top-6 right-6 z-[1050] flex items-center justify-center size-12 rounded-full bg-black/40 border border-white/10 text-white hover:bg-white/15 hover:scale-105 transition-all cursor-pointer backdrop-blur"
+                        >
+                            <X className="size-5" />
+                        </button>
+
+                        {/* Parallax Image Banner */}
+                        <div className="relative h-[45vh] sm:h-[55vh] w-full overflow-hidden">
+                            <motion.img 
+                                initial={{ scale: 1.15 }}
+                                animate={{ scale: 1 }}
+                                transition={{ duration: 0.5 }}
+                                src={selectedProject.image} 
+                                alt={selectedProject.title} 
+                                className="w-full h-full object-cover" 
+                            />
+                            {/* Rich dark gradient cover */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-black/30" />
+                            
+                            {/* Bottom absolute title metadata */}
+                            <div className="absolute bottom-8 left-0 w-full z-10">
+                                <div className="max-w-5xl mx-auto px-6 flex flex-col gap-3">
+                                    <div className="flex flex-wrap gap-2">
+                                        {Array.isArray(selectedProject.category) ? (
+                                            selectedProject.category.map((cat) => (
+                                                <span key={cat} className="px-3.5 py-1 rounded-full border border-primary/30 bg-black/50 text-[10px] font-bold uppercase tracking-wider text-primary">
+                                                    {cat}
+                                                </span>
+                                            ))
+                                        ) : (
+                                            <span className="px-3.5 py-1 rounded-full border border-primary/30 bg-black/50 text-[10px] font-bold uppercase tracking-wider text-primary">
+                                                {selectedProject.category}
+                                            </span>
+                                        )}
                                     </div>
-                                    <DialogTitle className="text-3xl font-bold mb-4">{selectedProject.title}</DialogTitle>
-                                    <DialogDescription className="text-lg text-foreground/70 leading-relaxed">
-                                        {selectedProject.longDescription}
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="flex gap-4 mt-8">
-                                    {selectedProject.live && (
-                                        <Button asChild className="rounded-full px-6">
-                                            <a href={selectedProject.live} target="_blank" rel="noopener noreferrer">
-                                                <ExternalLink className="mr-2 h-4 w-4" /> Live Demo
-                                            </a>
-                                        </Button>
-                                    )}
-                                    {selectedProject.github && (
-                                        <Button asChild variant="outline" className="rounded-full px-6 glass">
-                                            <a href={selectedProject.github} target="_blank" rel="noopener noreferrer">
-                                                <Github className="mr-2 h-4 w-4" /> GitHub
-                                            </a>
-                                        </Button>
-                                    )}
+                                    <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
+                                        {selectedProject.title}
+                                    </h1>
                                 </div>
                             </div>
                         </div>
-                    )}
-                </DialogContent>
-            </Dialog>
+
+                        {/* Layout Split Section */}
+                        <div className="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-[1.62fr_1.38fr] gap-16">
+                            
+                            {/* Left Side: Long Description and Details */}
+                            <div className="flex flex-col gap-8">
+                                <div>
+                                    <h3 className="text-xs uppercase tracking-widest text-foreground/40 mb-3 font-bold">Project Overview</h3>
+                                    <p className="text-lg text-foreground/80 leading-relaxed font-normal">
+                                        {selectedProject.longDescription}
+                                    </p>
+                                </div>
+                                
+                                <div className="border-t border-white/5 pt-8">
+                                    <h3 className="text-xs uppercase tracking-widest text-foreground/40 mb-4 font-bold">Key Architectural Specs</h3>
+                                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-foreground/75 list-none pl-0">
+                                        <li className="flex gap-2.5 items-start">
+                                            <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
+                                            <span>Designed with modern modular frontend systems for high-performance indexing.</span>
+                                        </li>
+                                        <li className="flex gap-2.5 items-start">
+                                            <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
+                                            <span>Integrated semantic vectors or scalable database operations ensuring 99%+ stability.</span>
+                                        </li>
+                                        <li className="flex gap-2.5 items-start">
+                                            <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
+                                            <span>Fully responsive interface tested extensively across desktop and mobile devices.</span>
+                                        </li>
+                                        <li className="flex gap-2.5 items-start">
+                                            <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
+                                            <span>Follows industry coding guidelines for production-level deployments.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            {/* Right Side: Technologies used & Links */}
+                            <div className="flex flex-col gap-8">
+                                
+                                {/* Technologies Used Grid */}
+                                <div className="p-7 rounded-[2rem] border border-white/5 bg-white/[0.02] backdrop-blur-md">
+                                    <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-5">Tech Stack & Tools</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedProject.tech.map((t) => (
+                                            <span 
+                                                key={t} 
+                                                className="px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs text-foreground/80 font-medium hover:border-primary/20 hover:text-white transition-colors"
+                                            >
+                                                {t}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* External Navigation Buttons */}
+                                <div className="p-7 rounded-[2rem] border border-white/5 bg-white/[0.02] backdrop-blur-md flex flex-col gap-4">
+                                    <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-2">Project Assets</h4>
+                                    <div className="flex flex-col gap-3">
+                                        {selectedProject.live && (
+                                            <a 
+                                                href={selectedProject.live} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer" 
+                                                className="flex items-center justify-center gap-2 h-12 rounded-full bg-white text-black font-bold text-sm hover:opacity-90 hover:scale-[1.01] transition-all cursor-pointer shadow-lg"
+                                            >
+                                                <ExternalLink className="size-4" /> Live Demo / Deployment
+                                            </a>
+                                        )}
+                                        {selectedProject.github && (
+                                            <a 
+                                                href={selectedProject.github} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer" 
+                                                className="flex items-center justify-center gap-2 h-12 rounded-full border border-white/10 bg-white/5 text-white font-bold text-sm hover:bg-white/10 hover:scale-[1.01] transition-all cursor-pointer"
+                                            >
+                                                <Github className="size-4" /> View GitHub Repository
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 };
