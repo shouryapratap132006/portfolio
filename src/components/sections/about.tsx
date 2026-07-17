@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Brain, Code, Cpu, Flame, GitPullRequest, Globe, Terminal } from "lucide-react";
+import { Brain, Code, Cpu, GitPullRequest, Terminal, Briefcase, GraduationCap, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const techCategories = [
@@ -38,9 +38,42 @@ const stats = [
     {
         value: "Active",
         label: "Open Source Contributor",
-        sublabel: "GSoC (GSOC) & Hacktoberfest",
+        sublabel: "Zulip · Rocket.Chat · Wagtail · Joplin · CNCF",
         icon: GitPullRequest,
         color: "text-[#f43f5e]"
+    }
+];
+
+const highlights = [
+    {
+        category: "🏆 Prestigious Selection",
+        title: "Amazon ML Summer School 2026",
+        institution: "Amazon · Highly Competitive Programme",
+        period: "2026",
+        description: "Selected from thousands of applicants across India for Amazon's elite ML programme. Learning from Amazon scientists & engineers across ML, Deep Learning, LLMs, Generative AI, and production-scale AI systems.",
+        icon: Star,
+        color: "from-amber-500/15 to-yellow-500/10 border-amber-500/30",
+        featured: true
+    },
+    {
+        category: "Internship Experience",
+        title: "Full Stack Developer Intern",
+        institution: "Brightpoint Studios Pvt. Ltd.",
+        period: "Jan 2026 – Jun 2026",
+        description: "Built 15+ interactive web experiences, engineered reusable modules reducing codebase overhead by 30%, and optimized rendering speed to improve cross-browser compatibility.",
+        icon: Briefcase,
+        color: "from-blue-500/10 to-cyan-500/10 border-blue-500/20",
+        featured: false
+    },
+    {
+        category: "Academic Background",
+        title: "B.Tech in Artificial Intelligence",
+        institution: "Newton School of Technology",
+        period: "Expected 2027",
+        description: "Focused on ML modeling, data structures, algorithm design, and integrating agentic reasoning models into modern web frameworks.",
+        icon: GraduationCap,
+        color: "from-purple-500/10 to-indigo-500/10 border-purple-500/20",
+        featured: false
     }
 ];
 
@@ -54,7 +87,7 @@ export const About = () => {
             <div className="container px-6 mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
                     
-                    {/* Left Column: Biography (taking 7 columns on LG) */}
+                    {/* Left Column: Biography & Stats (taking 7 columns on LG) */}
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -62,29 +95,29 @@ export const About = () => {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="lg:col-span-7 flex flex-col gap-6"
                     >
-                        <span className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">Behind the code</span>
-                        
-                        <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-4">
+                        <span className="section-eyebrow">Behind the code</span>
+
+                        <h2 className="section-heading mb-4">
                             Driven by intelligence. <br />
                             <span className="text-primary">Built for scale.</span>
                         </h2>
                         
-                        <div className="space-y-6 text-base md:text-lg leading-relaxed text-foreground/75 font-normal">
+                        <div className="space-y-5 text-base leading-relaxed text-foreground/70 font-normal">
                             <p>
-                                I&apos;m <span className="text-white font-semibold">Shourya Pratap</span>, a B.Tech Artificial Intelligence student at <span className="text-white font-medium">Newton School of Technology</span>, specialized in designing intelligent backend architectures, scalable integrations, and immersive user experiences.
+                                I&apos;m <span className="text-white font-semibold">Shourya Pratap</span>, a B.Tech Artificial Intelligence student at <span className="text-white font-medium">Newton School of Technology</span> and a proud selectee of the <span className="text-amber-300 font-semibold">Amazon ML Summer School 2026</span> — chosen from <span className="text-white font-medium">1,30,000+ applicants</span> at a <span className="text-white font-medium">2.3% acceptance rate</span>, placing me among India&apos;s top emerging AI engineers.
                             </p>
 
                             <p>
-                                I focus heavily on bridging the gap between high-performance web systems and AI workflows. Whether implementing complex state machine multi-agent systems via <span className="text-primary font-medium">LangGraph</span>, vector indexing structures through <span className="text-primary font-medium">FAISS RAG</span>, or structuring full-fledged Node/Django microservices—I write production-ready code with complete ownership.
+                                As a <span className="text-white font-medium">Full Stack Developer Intern at Brightpoint Studios Pvt. Ltd.</span> (Jan – Jun 2026), I engineered <span className="text-primary font-medium">15+ interactive web experiences</span> using HTML5, CSS3, JavaScript, and Phaser.js — architecting reusable module systems that cut codebase overhead by <span className="text-primary font-medium">30%</span> and resolved 50+ critical client-side performance bottlenecks across browsers and devices.
                             </p>
 
                             <p>
-                                A passionate open-source contributor and computer programming enthusiast, I constantly challenge myself to solve complex algorithms, contributing to modern web tooling and maintaining clean developer architectures.
+                                On the AI side, I build production-ready intelligent systems — stateful multi-agent pipelines with <span className="text-primary font-medium">LangGraph</span>, vector search via <span className="text-primary font-medium">FAISS RAG</span>, and LLM integrations with OpenAI &amp; Gemini. I&apos;m also an active open source contributor to projects including <span className="text-white font-medium">Zulip, Rocket.Chat, Wagtail, Joplin,</span> and <span className="text-white font-medium">CNCF</span> — with verified PRs from GirlScript Summer of Code and Hacktoberfest.
                             </p>
                         </div>
 
                         {/* Interactive Stats Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-4">
                             {stats.map((stat, i) => (
                                 <motion.div
                                     key={stat.label}
@@ -105,6 +138,56 @@ export const About = () => {
                                 </motion.div>
                             ))}
                         </div>
+
+                        {/* Recruiter Section: Amazon + Internship + Education Highlights */}
+                        <div className="mt-8">
+                            <h3 className="text-xs uppercase tracking-widest text-foreground/40 font-bold mb-6">
+                                Recruiter Highlights
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                {highlights.map((highlight, index) => (
+                                    <motion.div
+                                        key={highlight.title}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: index * 0.12, duration: 0.6 }}
+                                        className={`${
+                                            highlight.featured ? "md:col-span-2" : ""
+                                        } p-6 rounded-[2rem] border bg-gradient-to-br ${highlight.color} flex flex-col gap-3.5 hover:scale-[1.005] transition-transform shadow-lg relative overflow-hidden`}
+                                    >
+                                        {/* Glow for featured card */}
+                                        {highlight.featured && (
+                                            <div className="absolute -top-10 -right-10 size-32 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
+                                        )}
+                                        <div className="flex items-center justify-between">
+                                            <span className={`text-[10px] font-extrabold uppercase tracking-wider ${
+                                                highlight.featured ? "text-amber-400" : "text-primary"
+                                            }`}>
+                                                {highlight.category}
+                                            </span>
+                                            <highlight.icon className={`size-4 ${
+                                                highlight.featured ? "text-amber-400" : "text-primary"
+                                            }`} />
+                                        </div>
+                                        <div>
+                                            <h4 className={`text-lg font-bold leading-tight ${
+                                                highlight.featured ? "text-amber-100" : "text-white"
+                                            }`}>
+                                                {highlight.title}
+                                            </h4>
+                                            <p className="text-xs text-foreground/60 mt-1">
+                                                {highlight.institution} • <span className="italic">{highlight.period}</span>
+                                            </p>
+                                        </div>
+                                        <p className="text-xs text-foreground/70 leading-relaxed">
+                                            {highlight.description}
+                                        </p>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+
                     </motion.div>
 
                     {/* Right Column: Tech Arsenal (taking 5 columns on LG) */}

@@ -2,10 +2,46 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Briefcase, Calendar, MapPin, Award, Terminal, Star } from "lucide-react";
+import { Briefcase, Calendar, MapPin, Award, Terminal, Star, Brain, Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-const experiences = [
+// ─── Amazon logo (text + smile) ───────────────────────────────────────────────
+const AmazonWordmark = () => (
+    <svg viewBox="0 0 200 60" className="h-5 w-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="38" fontFamily="'Arial Black','Arial Bold',Arial,sans-serif" fontSize="40" fontWeight="900" letterSpacing="-1" fill="#FF9900">amazon</text>
+        <path d="M 8 50 Q 100 72 192 50" stroke="#FF9900" strokeWidth="4.5" fill="none" strokeLinecap="round"/>
+        <path d="M 182 44 L 192 50 L 183 57" stroke="#FF9900" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+interface Experience {
+    title: string;
+    role: string;
+    period: string;
+    location: string;
+    icon: React.ComponentType<{ className?: string }>;
+    skills: string[];
+    description: string;
+    featured?: boolean;
+    featuredStats?: { value: string; label: string }[];
+}
+
+const experiences: Experience[] = [
+    {
+        title: "Amazon ML Summer School 2026",
+        role: "Selected Participant · Machine Learning Programme",
+        period: "2026",
+        location: "Amazon · India",
+        icon: Brain,
+        featured: true,
+        featuredStats: [
+            { value: "1,30,000+", label: "Students Applied" },
+            { value: "3,000", label: "Students Selected" },
+            { value: "2.3%", label: "Acceptance Rate" },
+        ],
+        skills: ["Machine Learning", "Deep Learning", "LLMs", "Generative AI", "Model Optimisation"],
+        description: "Selected for Amazon's highly competitive machine learning programme from over 1,30,000 applicants across India — a 2.3% acceptance rate. Learning directly from Amazon scientists and engineers across sessions on modern ML, Deep Learning, Large Language Models, Generative AI, and production-scale AI systems.",
+    },
     {
         title: "Brightpoint Studios Pvt. Ltd.",
         role: "Full Stack Developer Intern",
@@ -59,8 +95,8 @@ export const Experience = () => {
                     viewport={{ once: true }}
                     className="text-center mb-24"
                 >
-                    <span className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">Chronology</span>
-                    <h2 className="mt-4 text-4xl md:text-6xl font-bold tracking-tight mb-4">
+                    <span className="section-eyebrow">Chronology</span>
+                    <h2 className="section-heading mt-4 mb-4">
                         Professional <span className="text-primary">Journey.</span>
                     </h2>
                     <p className="text-foreground/60 max-w-xl mx-auto text-base">
@@ -71,12 +107,13 @@ export const Experience = () => {
                 {/* Timeline wrapper */}
                 <div className="max-w-4xl mx-auto relative">
                     {/* Vertical Timeline center line */}
-                    <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-primary/60 via-white/10 to-transparent -translate-x-1/2" />
+                    <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-amber-400/60 via-primary/30 via-white/10 to-transparent -translate-x-1/2" />
 
                     <div className="space-y-16">
                         {experiences.map((exp, index) => {
                             const ExpIcon = exp.icon;
                             const isEven = index % 2 === 0;
+                            const isFeatured = exp.featured;
 
                             return (
                                 <motion.div
@@ -89,18 +126,37 @@ export const Experience = () => {
                                         isEven ? "md:flex-row-reverse" : ""
                                     }`}
                                 >
-                                    {/* Glassmorphic card container */}
+                                    {/* Card */}
                                     <div className="flex-1 w-full pl-8 md:pl-0">
-                                        <div className={`p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] hover:border-primary/20 transition-all duration-300 relative group shadow-xl ${
-                                            isEven ? "md:text-right" : "md:text-left"
-                                        }`}>
-                                            {/* Micro glowing mesh behind card */}
-                                            <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-tr from-primary/0 via-primary/[0.01] to-white/[0.01] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                        <div className={`p-8 rounded-[2rem] border transition-all duration-300 relative group shadow-xl overflow-hidden ${
+                                            isFeatured
+                                                ? "border-amber-400/25 bg-gradient-to-br from-amber-500/[0.08] via-white/[0.01] to-violet-500/[0.06] hover:border-amber-400/40"
+                                                : "border-white/5 bg-white/[0.02] hover:border-primary/20"
+                                        } ${isEven ? "md:text-right" : "md:text-left"}`}>
 
-                                            {/* Metadata line (Period & Location) */}
-                                            <div className={`flex flex-wrap gap-3 text-xs text-foreground/45 mb-4 items-center ${
+                                            {/* Featured inner glow */}
+                                            {isFeatured && (
+                                                <div className="absolute -top-12 -right-12 size-40 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+                                            )}
+                                            {/* Normal hover glow */}
+                                            {!isFeatured && (
+                                                <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-tr from-primary/0 via-primary/[0.01] to-white/[0.01] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                            )}
+
+                                            {/* Featured: Amazon wordmark */}
+                                            {isFeatured && (
+                                                <div className={`flex mb-5 ${isEven ? "md:justify-end" : ""}`}>
+                                                    <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.04] border border-amber-400/15">
+                                                        <AmazonWordmark />
+                                                        <span className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-amber-400/80">ML Summer School</span>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Metadata */}
+                                            <div className={`flex flex-wrap gap-3 text-xs mb-4 items-center ${
                                                 isEven ? "md:justify-end" : "md:justify-start"
-                                            }`}>
+                                            } ${isFeatured ? "text-amber-400/60" : "text-foreground/45"}`}>
                                                 <span className="flex items-center gap-1">
                                                     <Calendar className="size-3.5" />
                                                     {exp.period}
@@ -113,10 +169,10 @@ export const Experience = () => {
                                             </div>
 
                                             {/* Title & Role */}
-                                            <h3 className="text-2xl font-bold tracking-tight text-white mb-1">
+                                            <h3 className={`text-2xl font-bold tracking-tight mb-1 ${isFeatured ? "text-amber-100" : "text-white"}`}>
                                                 {exp.title}
                                             </h3>
-                                            <p className="text-primary font-semibold text-sm mb-4">
+                                            <p className={`font-semibold text-sm mb-4 ${isFeatured ? "text-amber-400" : "text-primary"}`}>
                                                 {exp.role}
                                             </p>
 
@@ -125,15 +181,29 @@ export const Experience = () => {
                                                 {exp.description}
                                             </p>
 
-                                            {/* Tech badges used in that role */}
-                                            <div className={`flex flex-wrap gap-2 ${
-                                                isEven ? "md:justify-end" : "md:justify-start"
-                                            }`}>
+                                            {/* Featured stats row */}
+                                            {isFeatured && exp.featuredStats && (
+                                                <div className={`flex flex-wrap gap-6 mb-6 ${isEven ? "md:justify-end" : ""}`}>
+                                                    {exp.featuredStats.map((s) => (
+                                                        <div key={s.label} className="flex flex-col">
+                                                            <span className="text-2xl font-extrabold text-amber-300">{s.value}</span>
+                                                            <span className="text-[9px] uppercase tracking-widest text-foreground/45 font-bold mt-0.5">{s.label}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                            {/* Skill badges */}
+                                            <div className={`flex flex-wrap gap-2 ${isEven ? "md:justify-end" : "md:justify-start"}`}>
                                                 {exp.skills.map((skill) => (
-                                                    <Badge 
-                                                        key={skill} 
-                                                        variant="outline" 
-                                                        className="border-white/5 bg-white/[0.03] text-[10px] text-foreground/60 tracking-wider uppercase px-2.5 py-1"
+                                                    <Badge
+                                                        key={skill}
+                                                        variant="outline"
+                                                        className={`text-[10px] tracking-wider uppercase px-2.5 py-1 ${
+                                                            isFeatured
+                                                                ? "border-amber-400/20 bg-amber-400/[0.06] text-amber-300/70"
+                                                                : "border-white/5 bg-white/[0.03] text-foreground/60"
+                                                        }`}
                                                     >
                                                         {skill}
                                                     </Badge>
@@ -142,14 +212,16 @@ export const Experience = () => {
                                         </div>
                                     </div>
 
-                                    {/* Timeline Node Connector pin */}
-                                    <div className="absolute left-4 md:left-1/2 top-4 -translate-x-1/2 z-20 flex items-center justify-center size-9 rounded-full bg-background border border-white/20 group-hover:border-primary transition-colors shadow-[0_0_15px_rgba(0,0,0,0.6)]">
-                                        <div className="flex items-center justify-center size-7 rounded-full bg-white/[0.03] text-foreground/60">
-                                            <ExpIcon className="size-3.5 text-primary" />
+                                    {/* Timeline Node */}
+                                    <div className={`absolute left-4 md:left-1/2 top-4 -translate-x-1/2 z-20 flex items-center justify-center size-9 rounded-full bg-background border transition-colors shadow-[0_0_15px_rgba(0,0,0,0.6)] ${
+                                        isFeatured ? "border-amber-400/40 shadow-[0_0_20px_rgba(251,191,36,0.15)]" : "border-white/20 hover:border-primary"
+                                    }`}>
+                                        <div className={`flex items-center justify-center size-7 rounded-full bg-white/[0.03]`}>
+                                            <ExpIcon className={`size-3.5 ${isFeatured ? "text-amber-400" : "text-primary"}`} />
                                         </div>
                                     </div>
 
-                                    {/* Spacer column on other side of timeline to keep balance */}
+                                    {/* Spacer */}
                                     <div className="flex-1 hidden md:block" />
                                 </motion.div>
                             );
