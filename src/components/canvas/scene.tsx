@@ -1,23 +1,19 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
+import React, { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Float } from "@react-three/drei";
 import * as THREE from "three";
 
+const particlePositions = new Float32Array(2000 * 3);
+for (let i = 0; i < 2000; i++) {
+    particlePositions[i * 3] = (Math.sin(i * 12.9898) * 43758.5453 % 1 - 0.5) * 10;
+    particlePositions[i * 3 + 1] = (Math.sin(i * 78.233) * 43758.5453 % 1 - 0.5) * 10;
+    particlePositions[i * 3 + 2] = (Math.sin(i * 39.425) * 43758.5453 % 1 - 0.5) * 10;
+}
+
 function Particles() {
     const ref = useRef<THREE.Points>(null!);
-
-    // Generate random positions for particles
-    const positions = useMemo(() => {
-        const pos = new Float32Array(2000 * 3);
-        for (let i = 0; i < 2000; i++) {
-            pos[i * 3] = (Math.random() - 0.5) * 10;
-            pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
-            pos[i * 3 + 2] = (Math.random() - 0.5) * 10;
-        }
-        return pos;
-    }, []);
 
     useFrame((state, delta) => {
         ref.current.rotation.x -= delta / 10;
@@ -26,7 +22,7 @@ function Particles() {
 
     return (
         <group rotation={[0, 0, Math.PI / 4]}>
-            <Points ref={ref} positions={positions} stride={3} frustumCulled={false}>
+            <Points ref={ref} positions={particlePositions} stride={3} frustumCulled={false}>
                 <PointMaterial
                     transparent
                     color="#6366f1"

@@ -5,6 +5,12 @@ import { motion } from "framer-motion";
 
 const experiences = [
     {
+        title: "Brightpoint Studios Pvt. Ltd.",
+        role: "Full Stack Developer Intern",
+        period: "Jan 2026 – Jun 2026 · Remote",
+        description: "Built 15+ interactive web experiences with JavaScript, HTML5, CSS, and Phaser.js; created reusable modules that reduced development effort by 30%; and resolved 50+ client-side issues to improve performance, stability, and cross-browser compatibility in an agile team.",
+    },
+    {
         title: "Girlscript Summer of Code",
         role: "Contributor",
         period: "2024",
