@@ -1,128 +1,118 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { BarChart3, Brain, Cloud, Code2, Database } from "lucide-react";
+import { BarChart3, Brain, Cloud, Code2, Database, Sparkles } from "lucide-react";
 
-const skillCategories = [
+const skillModes = [
   {
-    title: "AI / ML",
-    icon: <Brain className="w-6 h-6 text-purple-400" />,
-    skills: [
-      "Python",
-      "Pandas",
-      "NumPy",
-      "LangChain & LangGraph",
-      "RAG & Vector Embeddings",
-      "FAISS & SentenceTransformers",
-      "LLMs, OpenAI & Gemini APIs",
-      "Scikit-learn & TensorFlow",
-      "NLP & Hugging Face",
-    ],
+    name: "AI / ML",
+    eyebrow: "Intelligent systems",
+    icon: Brain,
+    accent: "from-violet-500 via-fuchsia-400 to-cyan-300",
+    glow: "bg-violet-500/20",
+    description: "I design agentic applications that retrieve, reason, and respond with useful context.",
+    focus: "Agentic AI",
+    skills: ["LangGraph", "LangChain", "RAG", "FAISS", "LLMs", "OpenAI API", "Gemini API", "Scikit-learn", "TensorFlow", "Hugging Face", "NLP", "Embeddings"],
   },
   {
-    title: "Full Stack",
-    icon: <Database className="w-6 h-6 text-green-400" />,
-    skills: [
-      "Node.js",
-      "Express.js",
-      "Django & FastAPI",
-      "MongoDB, MySQL & PostgreSQL",
-      "Prisma ORM",
-      "REST APIs",
-      "JWT & Clerk Authentication",
-      "Socket.IO & Stripe",
-    ],
+    name: "Full Stack",
+    eyebrow: "Product engineering",
+    icon: Code2,
+    accent: "from-cyan-400 via-sky-500 to-blue-600",
+    glow: "bg-cyan-500/20",
+    description: "I turn complex product ideas into responsive, secure, and delightful web experiences.",
+    focus: "Next.js",
+    skills: ["React", "Next.js", "TypeScript", "Node.js", "Django", "FastAPI", "PostgreSQL", "MongoDB", "Prisma", "REST APIs", "Socket.IO", "Stripe"],
   },
   {
-    title: "Data & Visualisation",
-    icon: <BarChart3 className="w-6 h-6 text-blue-400" />,
-    skills: [
-      "SQL & Excel",
-      "Tableau & Looker Studio",
-      "Power BI & Google Sheets",
-      "Pandas, NumPy & Jupyter",
-      "Matplotlib & Seaborn",
-      "ETL Pipeline Design",
-      "EDA & KPI Tracking",
-      "Dashboard Storytelling",
-    ],
+    name: "Data & Visualisation",
+    eyebrow: "Decision-ready insights",
+    icon: BarChart3,
+    accent: "from-amber-300 via-orange-400 to-rose-500",
+    glow: "bg-amber-500/20",
+    description: "I transform raw information into precise analysis, meaningful KPIs, and clear data stories.",
+    focus: "Tableau",
+    skills: ["Python", "SQL", "Pandas", "NumPy", "Tableau", "Power BI", "Excel", "Looker Studio", "Matplotlib", "Seaborn", "ETL", "EDA"],
   },
   {
-    title: "Cloud & DevOps",
-    icon: <Cloud className="w-6 h-6 text-red-400" />,
-    skills: [
-      "AWS EC2",
-      "Docker & Nginx",
-      "GitHub Actions & GHCR",
-      "Git & GitHub",
-      "Vercel & Render",
-      "Neon PostgreSQL",
-    ],
+    name: "Cloud & DevOps",
+    eyebrow: "Reliable delivery",
+    icon: Cloud,
+    accent: "from-emerald-400 via-teal-400 to-cyan-500",
+    glow: "bg-emerald-500/20",
+    description: "I ship cloud-native applications with repeatable deployments and production-minded workflows.",
+    focus: "AWS",
+    skills: ["AWS EC2", "Docker", "Nginx", "GitHub Actions", "GHCR", "Neon", "Vercel", "Render", "Git", "GitHub", "Postman", "CI/CD"],
   },
   {
-    title: "Core Development",
-    icon: <Code2 className="w-6 h-6 text-orange-400" />,
-    skills: [
-      "React & Next.js",
-      "JavaScript & TypeScript",
-      "Python & C++",
-      "HTML5, CSS & Phaser.js",
-      "Postman",
-      "Figma",
-      "Chart.js",
-      "Framer Motion & Three.js",
-    ],
+    name: "Core",
+    eyebrow: "Developer foundations",
+    icon: Database,
+    accent: "from-pink-400 via-rose-400 to-orange-300",
+    glow: "bg-rose-500/20",
+    description: "A strong foundation in problem-solving, interface craft, and practical software development.",
+    focus: "Problem solving",
+    skills: ["JavaScript", "Python", "C++", "HTML5", "CSS", "Tailwind CSS", "Phaser.js", "Framer Motion", "Three.js", "Figma", "DSA", "UI/UX"],
   },
-];
-
+] as const;
 
 export const Skills = () => {
-    return (
-        <section id="skills" className="py-24 bg-white/5">
-            <div className="container px-6 mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <h2 className="text-3xl md:text-5xl font-bold mb-4">Technical <span className="text-primary">Skills</span></h2>
-                    <p className="text-foreground/60 max-w-2xl mx-auto">
-                        A comprehensive overview of my technical expertise and the tools I use to bring ideas to life.
-                    </p>
-                </motion.div>
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeMode = skillModes[activeIndex];
+  const Icon = activeMode.icon;
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2">
-                    {skillCategories.map((category, categoryIndex) => (
-                        <motion.div
-                            key={category.title}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: categoryIndex * 0.1 }}
-                        >
-                            <Card className="h-full glass-dark border-white/5 hover:border-primary/50 transition-colors group">
-                                <CardContent className="p-8">
-                                    <div className="mb-6 p-3 rounded-2xl bg-white/5 w-fit group-hover:scale-110 transition-transform">
-                                        {category.icon}
-                                    </div>
-                                    <h3 className="text-xl font-bold mb-4">{category.title}</h3>
-                                    <ul className="space-y-2">
-                                        {category.skills.map((skill) => (
-                                            <li key={skill} className="text-foreground/60 flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
-                                                {skill}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
-                    ))}
-                </div>
+  return (
+    <section id="skills" className="relative overflow-hidden py-28 bg-white/[0.025]">
+      <div className={`absolute left-1/2 top-0 h-96 w-[42rem] -translate-x-1/2 rounded-full ${activeMode.glow} blur-[140px] transition-colors duration-700`} />
+      <div className="container relative mx-auto px-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mx-auto max-w-3xl text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">Capabilities</span>
+          <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-6xl">My evolving <span className="text-primary">skill universe.</span></h2>
+          <p className="mx-auto mt-5 max-w-2xl text-foreground/60">Choose a mode to explore the tools and systems I use to bring ideas from concept to production.</p>
+        </motion.div>
+
+        <div className="no-scrollbar mt-10 flex gap-2 overflow-x-auto pb-2 md:justify-center">
+          {skillModes.map((mode, index) => {
+            const ModeIcon = mode.icon;
+            const isActive = index === activeIndex;
+            return (
+              <button key={mode.name} onClick={() => setActiveIndex(index)} className={`group flex shrink-0 items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all ${isActive ? "border-white/25 bg-white text-black shadow-lg shadow-white/10" : "border-white/10 bg-white/[0.03] text-white/60 hover:border-white/25 hover:text-white"}`}>
+                <ModeIcon className="size-4" /> {mode.name}
+              </button>
+            );
+          })}
+        </div>
+
+        <motion.div key={activeMode.name} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="mt-10 grid overflow-hidden rounded-[2rem] border border-white/10 bg-[#0c0c10] shadow-2xl shadow-black/40 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="relative min-h-[430px] overflow-hidden border-b border-white/10 p-8 lg:border-b-0 lg:border-r md:p-12">
+            <div className={`absolute -left-20 top-16 size-72 rounded-full ${activeMode.glow} blur-[90px]`} />
+            <div className="relative z-10 flex h-full flex-col">
+              <div className="flex items-center gap-3 text-white/55"><Sparkles className="size-4" /> <span className="text-xs uppercase tracking-[0.25em]">{activeMode.eyebrow}</span></div>
+              <h3 className="mt-8 max-w-sm text-4xl font-bold tracking-tight">{activeMode.description}</h3>
+              <div className="relative mx-auto mt-auto flex aspect-square w-full max-w-[310px] items-center justify-center">
+                <div className="absolute inset-2 rounded-full border border-white/15" />
+                <div className="absolute inset-9 rounded-full border border-dashed border-white/15" />
+                {[0, 1, 2, 3, 4].map((item) => (
+                  <span key={item} style={{ transform: `rotate(${item * 72}deg) translateY(-142px) rotate(-${item * 72}deg)` }} className="absolute left-[calc(50%-20px)] top-[calc(50%-20px)] flex size-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-[10px] font-bold backdrop-blur">
+                    {activeMode.skills[item].slice(0, 2).toUpperCase()}
+                  </span>
+                ))}
+                <div className={`relative flex size-28 items-center justify-center rounded-full bg-gradient-to-br ${activeMode.accent} shadow-[0_0_45px_rgba(255,255,255,0.2)]`}><Icon className="size-12 text-black" /></div>
+              </div>
             </div>
-        </section>
-    );
+          </div>
+          <div className="p-8 md:p-12">
+            <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-7">
+              <div><p className="text-xs uppercase tracking-[0.25em] text-white/45">Current mode</p><h3 className="mt-2 text-3xl font-bold">{activeMode.name}</h3></div>
+              <span className={`rounded-full bg-gradient-to-r ${activeMode.accent} px-4 py-2 text-xs font-bold text-black`}>{activeMode.focus}</span>
+            </div>
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {activeMode.skills.map((skill, index) => <motion.div key={skill} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.03 }} className="rounded-2xl border border-white/10 bg-white/[0.035] px-3 py-4 text-center text-sm text-white/75 transition-colors hover:border-white/25 hover:bg-white/[0.08]">{skill}</motion.div>)}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
 };

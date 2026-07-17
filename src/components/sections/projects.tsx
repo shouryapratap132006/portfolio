@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Github, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Github, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -278,16 +278,24 @@ const ProjectCard = ({ project, onClick }: { project: (typeof projects)[number];
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={onClick}
-            className="relative h-[400px] w-full rounded-3xl glass-dark border border-white/5 overflow-hidden cursor-pointer group"
+            className="relative h-[460px] w-[min(82vw,390px)] shrink-0 rounded-[2rem] glass-dark border border-white/10 overflow-hidden cursor-pointer group shadow-2xl shadow-black/20"
         >
             <div
                 style={{
                     transform: "translateZ(50px)",
                     transformStyle: "preserve-3d",
                 }}
-                className="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+                className="absolute inset-0 p-7 flex flex-col justify-end bg-gradient-to-t from-black via-black/55 to-transparent"
             >
                 <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-5">
+                        <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
+                            {project.category}
+                        </span>
+                        <span className="flex size-9 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 group-hover:rotate-45">
+                            <ArrowUpRight className="size-4" />
+                        </span>
+                    </div>
                     <div className="flex flex-wrap gap-2 mb-4">
                         {project.tech.slice(0, 3).map((t) => (
                             <Badge key={t} variant="secondary" className="bg-white/10 text-[10px] uppercase tracking-wider">
@@ -312,41 +320,61 @@ const ProjectCard = ({ project, onClick }: { project: (typeof projects)[number];
 export const Projects = () => {
     const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
     const [activeCategory, setActiveCategory] = useState<(typeof projectCategories)[number]>("All");
+    const scrollRef = useRef<HTMLDivElement>(null);
     const visibleProjects = projects
         .filter((project) => activeCategory === "All" || project.category === activeCategory)
         .sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
+    const scrollProjects = (direction: "left" | "right") => {
+        scrollRef.current?.scrollBy({
+            left: direction === "left" ? -440 : 440,
+            behavior: "smooth",
+        });
+    };
 
     return (
-        <section id="projects" className="py-24">
+        <section id="projects" className="py-28 overflow-hidden">
             <div className="container px-6 mx-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-16"
+                    className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between mb-10"
                 >
-                    <h2 className="text-3xl md:text-5xl font-bold mb-4">Featured <span className="text-primary">Projects</span></h2>
-                    <p className="text-foreground/60 max-w-2xl mx-auto">
-                        Explore my work across AI/ML, full-stack engineering, and data visualisation analytics.
+                    <div className="max-w-2xl">
+                        <span className="text-primary text-xs font-semibold uppercase tracking-[0.28em]">Selected work</span>
+                        <h2 className="mt-4 text-4xl md:text-6xl font-bold tracking-tight">A closer look at <span className="text-primary">what I build.</span></h2>
+                    </div>
+                    <p className="text-foreground/60 max-w-sm md:pb-2">
+                        Scroll through intelligent products, data stories, and production-ready experiences.
                     </p>
                 </motion.div>
 
-                <div className="flex flex-wrap justify-center gap-3 mb-10">
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+                    <div className="flex flex-wrap gap-2">
                     {projectCategories.map((category) => (
                         <Button
                             key={category}
                             variant={activeCategory === category ? "default" : "outline"}
-                            className="rounded-full px-5"
+                            className="rounded-full px-5 border-white/10"
                             onClick={() => setActiveCategory(category)}
                         >
                             {category}
                         </Button>
                     ))}
+                    </div>
+                    <div className="flex gap-2">
+                        <Button variant="outline" size="icon" aria-label="Previous projects" className="rounded-full border-white/15 bg-white/5" onClick={() => scrollProjects("left")}>
+                            <ArrowLeft />
+                        </Button>
+                        <Button variant="outline" size="icon" aria-label="Next projects" className="rounded-full border-white/15 bg-white/5" onClick={() => scrollProjects("right")}>
+                            <ArrowRight />
+                        </Button>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div ref={scrollRef} className="no-scrollbar -mx-6 flex gap-5 overflow-x-auto px-6 pb-4 snap-x snap-mandatory">
                     {visibleProjects.map((project) => (
-                        <ProjectCard key={project.id} project={project} onClick={() => setSelectedProject(project)} />
+                        <div key={project.id} className="snap-start"><ProjectCard project={project} onClick={() => setSelectedProject(project)} /></div>
                     ))}
                 </div>
             </div>
